@@ -3,23 +3,31 @@ import React, { useState, useEffect } from 'react';
 
 const App = () => {
   const [resize, setResize] = useState({width: window.innerWidth, height: window.innerHeight});
+  const [read, setRead] = useState(true);
 
   useEffect(() => {
     const resizeReadingFunction = () => {
       console.log('reading')
       setResize({width: window.innerWidth, height: window.innerHeight})
     };
-    console.log('mount')
-    window.addEventListener('resize', resizeReadingFunction);
+    
+    if(read){
+      console.log('mount')
+      window.addEventListener('resize', resizeReadingFunction);
+    }else{
+      console.log(`unmount`);
+      window.removeEventListener('resize', resizeReadingFunction);
+    };
   
     return () => {
       console.log('unmount')
       window.removeEventListener('resize', resizeReadingFunction)}
-  }, [resize])
+  }, [read])
   return (
     <div>
     hello
       <p>{resize.width} {resize.height}</p>
+      <button onClick={()=> setRead(!read)}>{read? "STOP": "READ"}</button>
     </div>
   )
 }
